@@ -4,9 +4,11 @@ import './style.css';
 const CAMPAIGN_CONFIG = {
   campaignName: "CompTIA Security+ Certification Fund",
   goalAmount: 431.00,
-  raisedAmount: 185.00,
-  cashAppHandle: "$SecurityFund",
-  contributorCount: 14,
+  raisedAmount: 0.00,              // Reset to $0.00 as requested
+  cashAppHandle: "$LordGrow",      // Updated CashApp tag
+  appleCashIdentifier: "dylangrow27@gmail.com", // Configurable Apple Cash contact (defaulting to clean user address placeholder)
+  googlePayIdentifier: "dylangrow27@gmail.com", // Configurable Google Pay contact (defaulting to clean user address placeholder)
+  contributorCount: 0,             // Reset to 0 contributions
   daysRemaining: 24
 };
 
@@ -21,14 +23,32 @@ const progressPercentEl = document.getElementById('progress-percent');
 const progressFillEl = document.getElementById('progress-fill');
 const contributionCountEl = document.getElementById('contribution-count');
 const daysRemainingEl = document.getElementById('days-remaining');
+
+// CashApp DOM Elements
 const cashAppInputEl = document.getElementById('cashapp-handle-input') as HTMLInputElement | null;
 const copyButtonEl = document.getElementById('copy-button');
 const copyBtnTextEl = document.getElementById('copy-btn-text');
 const copyIconEl = document.getElementById('copy-icon');
 const successIconEl = document.getElementById('success-icon');
-const srAnnouncementEl = document.getElementById('sr-announcement');
-const pwaStatusEl = document.getElementById('pwa-status');
-const pwaStatusTextEl = document.getElementById('pwa-status-text');
+const cashAppLinkEl = document.getElementById('cashapp-link') as HTMLAnchorElement | null;
+
+// Apple Cash DOM Elements
+const appleInputEl = document.getElementById('applecash-handle-input') as HTMLInputElement | null;
+const appleCopyBtnEl = document.getElementById('apple-copy-btn');
+const appleCopyBtnTextEl = document.getElementById('apple-copy-btn-text');
+
+// Google Pay DOM Elements
+const googleInputEl = document.getElementById('googlepay-handle-input') as HTMLInputElement | null;
+const googleCopyBtnEl = document.getElementById('google-copy-btn');
+const googleCopyBtnTextEl = document.getElementById('google-copy-btn-text');
+
+// Payment Methods Tabs DOM Elements
+const tabCashApp = document.getElementById('tab-cashapp');
+const tabAppleCash = document.getElementById('tab-applecash');
+const tabGooglePay = document.getElementById('tab-googlepay');
+const panelCashApp = document.getElementById('panel-cashapp');
+const panelAppleCash = document.getElementById('panel-applecash');
+const panelGooglePay = document.getElementById('panel-googlepay');
 
 // Theme Switcher DOM Elements
 const themeSwitcherBtn = document.getElementById('theme-switcher');
@@ -74,6 +94,10 @@ const simContribVal = document.getElementById('sim-contrib-val');
 // PWA Update Banner DOM Elements
 const updateToastEl = document.getElementById('update-toast');
 const reloadBtnEl = document.getElementById('reload-btn');
+
+const srAnnouncementEl = document.getElementById('sr-announcement');
+const pwaStatusEl = document.getElementById('pwa-status');
+const pwaStatusTextEl = document.getElementById('pwa-status-text');
 
 let waitingWorker: ServiceWorker | null = null;
 let deferredPrompt: any = null;
@@ -297,7 +321,6 @@ function updateActivePresetChip(selectedAmount: number | null): void {
  * Initializes preset chip event listeners.
  */
 function setupEstimatorEvents(): void {
-  // Preset chips click listeners
   estChips.forEach((chip) => {
     chip.addEventListener('click', () => {
       const amountAttr = chip.getAttribute('data-amount');
@@ -312,7 +335,6 @@ function setupEstimatorEvents(): void {
     });
   });
 
-  // Custom input listener
   if (estInputEl) {
     estInputEl.addEventListener('input', (e) => {
       const target = e.target as HTMLInputElement;
@@ -323,7 +345,6 @@ function setupEstimatorEvents(): void {
     });
   }
 
-  // Trigger default estimation ($50.00 preset selected)
   if (estInputEl) {
     estInputEl.value = "50";
   }
@@ -345,62 +366,76 @@ function initializeCampaign(): void {
   if (cashAppInputEl) {
     cashAppInputEl.value = CAMPAIGN_CONFIG.cashAppHandle;
   }
+  if (cashAppLinkEl) {
+    cashAppLinkEl.href = `https://cash.app/${CAMPAIGN_CONFIG.cashAppHandle}`;
+  }
+
+  if (appleInputEl) {
+    appleInputEl.value = CAMPAIGN_CONFIG.appleCashIdentifier;
+  }
+
+  if (googleInputEl) {
+    googleInputEl.value = CAMPAIGN_CONFIG.googlePayIdentifier;
+  }
 
   updateProgress();
 }
 
 /**
- * Copies the CashApp handle to the clipboard and triggers accessible feedback.
+ * Generic copy function with brief UI feedback reset.
  */
-async function copyToClipboard(): Promise<void> {
-  const textToCopy = CAMPAIGN_CONFIG.cashAppHandle;
-
+async function performCopy(text: string, btnTextEl: HTMLElement | null, triggerButton: HTMLElement | null): Promise<void> {
   try {
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(textToCopy);
+      await navigator.clipboard.writeText(text);
     } else {
-      if (cashAppInputEl) {
-        cashAppInputEl.select();
-        document.execCommand('copy');
-        window.getSelection()?.removeAllRanges();
-      } else {
-        throw new Error('No clipboard method available');
-      }
+      throw new Error('Clipboard API blocked');
     }
 
-    // Visual feedback logic
-    if (copyBtnTextEl && copyIconEl && successIconEl && copyButtonEl) {
-      copyBtnTextEl.textContent = "COPIED";
-      copyIconEl.classList.add('hidden');
-      successIconEl.classList.remove('hidden');
-      
-      copyButtonEl.classList.remove('bg-theme-primary', 'hover:bg-theme-hover');
-      copyButtonEl.classList.add('bg-zinc-800', 'text-theme-primary', 'border', 'border-theme-primary/50', 'shadow-theme-glow');
+    if (btnTextEl && triggerButton) {
+      const originalText = btnTextEl.textContent || "COPY";
+      btnTextEl.textContent = "COPIED";
+      triggerButton.classList.remove('bg-theme-primary', 'hover:bg-theme-hover');
+      triggerButton.classList.add('bg-zinc-800', 'text-theme-primary', 'border', 'border-theme-primary/30');
 
       if (srAnnouncementEl) {
-        srAnnouncementEl.textContent = `CashApp handle ${textToCopy} copied successfully.`;
+        srAnnouncementEl.textContent = `Copied address: ${text}`;
       }
 
-      // Reset feedback after 2 seconds
       setTimeout(() => {
-        copyBtnTextEl.textContent = "COPY";
-        copyIconEl.classList.remove('hidden');
-        successIconEl.classList.add('hidden');
-        copyButtonEl.classList.add('bg-theme-primary', 'hover:bg-theme-hover');
-        copyButtonEl.classList.remove('bg-zinc-800', 'text-theme-primary', 'border', 'border-theme-primary/50', 'shadow-theme-glow');
+        btnTextEl.textContent = originalText;
+        triggerButton.classList.add('bg-theme-primary', 'hover:bg-theme-hover');
+        triggerButton.classList.remove('bg-zinc-800', 'text-theme-primary', 'border', 'border-theme-primary/30');
+        triggerButton.focus(); // Restore key focus
         
-        copyButtonEl.focus();
-
         if (srAnnouncementEl) {
           srAnnouncementEl.textContent = "";
         }
       }, 2000);
     }
   } catch (err) {
-    console.error('Failed to copy text: ', err);
-    if (srAnnouncementEl) {
-      srAnnouncementEl.textContent = "Failed to copy. Please manually select and copy the handle.";
-    }
+    console.error('Failed to copy: ', err);
+    if (srAnnouncementEl) srAnnouncementEl.textContent = "Copy blocked. Please select and copy manually.";
+  }
+}
+
+/**
+ * Copies the CashApp handle.
+ */
+async function copyCashAppToClipboard(): Promise<void> {
+  const textToCopy = CAMPAIGN_CONFIG.cashAppHandle;
+  
+  // Custom check icons toggle for CashApp primary button
+  if (copyBtnTextEl && copyIconEl && successIconEl && copyButtonEl) {
+    copyIconEl.classList.add('hidden');
+    successIconEl.classList.remove('hidden');
+    
+    await performCopy(textToCopy, copyBtnTextEl, copyButtonEl);
+    
+    setTimeout(() => {
+      copyIconEl.classList.remove('hidden');
+      successIconEl.classList.add('hidden');
+    }, 2000);
   }
 }
 
@@ -508,15 +543,60 @@ function setupDetailsA11y(): void {
 }
 
 /**
+ * Setup Payment Method selector tab triggers.
+ */
+function setupPaymentTabs(): void {
+  const tabs = [tabCashApp, tabAppleCash, tabGooglePay];
+  const panels = [panelCashApp, panelAppleCash, panelGooglePay];
+
+  tabs.forEach((tab, index) => {
+    if (tab) {
+      tab.addEventListener('click', () => {
+        // Toggle selected styling on tab headers
+        tabs.forEach((t) => {
+          if (t) {
+            t.setAttribute('aria-selected', 'false');
+            t.className = "py-2 text-[10px] md:text-xs font-mono font-bold rounded-lg text-zinc-500 hover:text-zinc-300 cursor-pointer transition-all";
+          }
+        });
+        tab.setAttribute('aria-selected', 'true');
+        tab.className = "py-2 text-[10px] md:text-xs font-mono font-bold rounded-lg bg-zinc-900 text-theme-primary cursor-pointer transition-all";
+
+        // Toggle visibility on panels
+        panels.forEach((panel) => {
+          if (panel) {
+            panel.classList.add('hidden');
+          }
+        });
+        const activePanel = panels[index];
+        if (activePanel) {
+          activePanel.classList.remove('hidden');
+        }
+      });
+    }
+  });
+
+  // Attach copy button listeners for subpanels
+  if (appleCopyBtnEl && appleCopyBtnTextEl) {
+    appleCopyBtnEl.addEventListener('click', () => {
+      performCopy(CAMPAIGN_CONFIG.appleCashIdentifier, appleCopyBtnTextEl, appleCopyBtnEl);
+    });
+  }
+
+  if (googleCopyBtnEl && googleCopyBtnTextEl) {
+    googleCopyBtnEl.addEventListener('click', () => {
+      performCopy(CAMPAIGN_CONFIG.googlePayIdentifier, googleCopyBtnTextEl, googleCopyBtnEl);
+    });
+  }
+}
+
+/**
  * Sets up listeners for the PWA install button.
  */
 function setupInstallButton(): void {
   window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent default mini-infobar on mobile browsers
     e.preventDefault();
     deferredPrompt = e;
-    
-    // Unhide install button
     if (pwaInstallBtn) {
       pwaInstallBtn.classList.remove('hidden');
     }
@@ -542,7 +622,6 @@ function setupInstallButton(): void {
     console.log('PWA app installed successfully');
   });
 
-  // Keep button hidden if already launched as standalone app
   if (window.matchMedia('(display-mode: standalone)').matches || (navigator as any).standalone) {
     if (pwaInstallBtn) {
       pwaInstallBtn.classList.add('hidden');
@@ -609,7 +688,7 @@ function setupServiceWorker(): void {
 }
 
 // Event Bindings
-if (copyButtonEl) copyButtonEl.addEventListener('click', copyToClipboard);
+if (copyButtonEl) copyButtonEl.addEventListener('click', copyCashAppToClipboard);
 if (themeSwitcherBtn) themeSwitcherBtn.addEventListener('click', cycleTheme);
 
 if (toggleSimulatorBtn && simulatorPanel) {
@@ -637,7 +716,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeCampaign();
   setupDetailsA11y();
   setupEstimatorEvents();
-  setupInstallButton(); // Set up PWA installation listeners
+  setupPaymentTabs(); // Set up Apple Cash/GPay tabs
+  setupInstallButton();
   updateConnectionStatus();
   setupServiceWorker();
 });
