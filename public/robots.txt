@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://yourusername.github.io/security-crowdfund-campaign/sitemap.xml
+Sitemap: https://dylangrow.github.io/CrowdFund/sitemap.xml
