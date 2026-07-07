@@ -1,0 +1,19 @@
+{
+  "name": "CompTIA Security+ Certification Fund",
+  "short_name": "Sec+ Fund",
+  "description": "Secure, privacy-first, zero-dependency static crowdfunding campaign.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
