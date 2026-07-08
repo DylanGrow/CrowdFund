@@ -48,25 +48,97 @@
 
 @layer utilities {
   .glass-card {
-    background: rgba(24, 24, 27, 0.4);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(9, 9, 11, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Premium Hover Card effects */
+  .hover-glow-card {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .hover-glow-card:hover {
+    border-color: rgba(var(--color-primary-rgb), 0.25);
+    box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.6), 0 0 25px -5px rgba(var(--color-primary-rgb), 0.08);
+    transform: translateY(-2px) scale(1.003);
+  }
+
+  /* Progress Bar Linear Glow & Shimmer effect */
+  .progress-bar-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .progress-bar-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: progress-shimmer 3s infinite linear;
+  }
+
+  /* Custom Glow for active milestones */
+  .milestone-active-glow {
+    box-shadow: 0 0 15px var(--color-primary-glow);
   }
 }
 
-/* Fix 10: Smooth accordion expansion transition */
+/* Floating Mesh Gradient Blob keyframes */
+@keyframes float-blob-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(60px, -45px) scale(1.1);
+  }
+}
+
+@keyframes float-blob-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1.05);
+  }
+  50% {
+    transform: translate(-50px, 60px) scale(0.95);
+  }
+}
+
+.animate-float-1 {
+  animation: float-blob-1 14s infinite alternate ease-in-out;
+}
+
+.animate-float-2 {
+  animation: float-blob-2 18s infinite alternate ease-in-out;
+}
+
+/* Accordion slide-down transition details */
 details[open] summary ~ * {
-  animation: sweep 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: sweep 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes sweep {
   0% {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-6px);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes progress-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }
 
