@@ -384,6 +384,14 @@
                 </div>
               </div>
 
+              <!-- Textbook Secured Alert Badge -->
+              <div id="textbook-secured-badge" class="hidden text-[10px] text-theme-primary/90 font-mono flex items-center gap-1.5 bg-theme-primary/5 p-2.5 rounded-xl border border-theme-primary/10 transition-all duration-300">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                TEXTBOOK SECURED! Focus is now on the remaining exam voucher expense.
+              </div>
+
               <!-- Item 2: Exam Voucher -->
               <div id="budget-item-voucher" class="space-y-1 p-2.5 rounded-lg border border-zinc-900 bg-zinc-950/20">
                 <div class="flex justify-between items-center">
@@ -514,16 +522,16 @@
         <div class="space-y-1.5">
           <div class="flex justify-between">
             <span>Simulate Raised:</span>
-            <span id="sim-raised-val" class="text-theme-primary font-bold transition-colors duration-300">$185.00</span>
+            <span id="sim-raised-val" class="text-theme-primary font-bold transition-colors duration-300">$20.00</span>
           </div>
-          <input id="sim-raised-slider" type="range" min="0" max="600" value="185" class="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-theme-primary" />
+          <input id="sim-raised-slider" type="range" min="0" max="600" value="20" class="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-theme-primary" />
         </div>
         <div class="space-y-1.5">
           <div class="flex justify-between">
             <span>Contributors:</span>
-            <span id="sim-contrib-val" class="text-indigo-400 font-bold">14</span>
+            <span id="sim-contrib-val" class="text-indigo-400 font-bold">1</span>
           </div>
-          <input id="sim-contrib-slider" type="range" min="1" max="100" value="14" class="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" />
+          <input id="sim-contrib-slider" type="range" min="0" max="100" value="1" class="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" />
         </div>
         <p class="text-[9px] text-zinc-500 leading-relaxed">
           * This panel is for demonstration. It tests CSS transitions, dynamic progress calculation, and layout adaptability.

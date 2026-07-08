@@ -4,11 +4,11 @@ import './style.css';
 const CAMPAIGN_CONFIG = {
   campaignName: "CompTIA Security+ Certification Fund",
   goalAmount: 431.00,
-  raisedAmount: 0.00,              // Reset to $0.00 as requested
+  raisedAmount: 20.00,              // Reset to $20.00 as requested (textbook covered)
   cashAppHandle: "$LordGrow",      // Updated CashApp tag
   appleCashIdentifier: "dylangrow27@gmail.com", // Configurable Apple Cash contact (defaulting to clean user address placeholder)
   googlePayIdentifier: "dylangrow27@gmail.com", // Configurable Google Pay contact (defaulting to clean user address placeholder)
-  contributorCount: 0,             // Reset to 0 contributions
+  contributorCount: 1,             // Reset to 1 contribution (covering textbook)
   daysRemaining: 24
 };
 
@@ -61,6 +61,7 @@ const materialsStatusEl = document.getElementById('materials-status');
 const materialsProgressEl = document.getElementById('materials-progress');
 const materialsPercentEl = document.getElementById('materials-percent');
 const materialsFundedValEl = document.getElementById('materials-funded-val');
+const textbookSecuredBadgeEl = document.getElementById('textbook-secured-badge');
 
 const voucherStatusEl = document.getElementById('voucher-status');
 const voucherProgressEl = document.getElementById('voucher-progress');
@@ -212,12 +213,20 @@ function updateItemizedBudgetProgress(raised: number): void {
     if (materialsPercent >= 100) {
       materialsStatusEl.textContent = "SECURED";
       materialsStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-theme-dark/30 text-theme-primary font-bold border border-theme-primary/10 transition-colors";
-    } else if (materialsPercent > 0) {
-      materialsStatusEl.textContent = "FUNDING";
-      materialsStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-200 border border-zinc-700";
+      if (textbookSecuredBadgeEl) {
+        textbookSecuredBadgeEl.classList.remove('hidden');
+      }
     } else {
-      materialsStatusEl.textContent = "PENDING";
-      materialsStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-500 border border-transparent";
+      if (textbookSecuredBadgeEl) {
+        textbookSecuredBadgeEl.classList.add('hidden');
+      }
+      if (materialsPercent > 0) {
+        materialsStatusEl.textContent = "FUNDING";
+        materialsStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-200 border border-zinc-700";
+      } else {
+        materialsStatusEl.textContent = "PENDING";
+        materialsStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-500 border border-transparent";
+      }
     }
   }
 
