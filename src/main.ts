@@ -6,8 +6,8 @@ const CAMPAIGN_CONFIG = {
   goalAmount: 431.00,
   raisedAmount: 20.00,              // Reset to $20.00 as requested (textbook covered)
   cashAppHandle: "$LordGrow",      // Updated CashApp tag
-  appleCashIdentifier: "dylangrow27@gmail.com", // Configurable Apple Cash contact (defaulting to clean user address placeholder)
-  googlePayIdentifier: "dylangrow27@gmail.com", // Configurable Google Pay contact (defaulting to clean user address placeholder)
+  appleCashIdentifier: "dylangrow27@gmail.com", // Configurable Apple Cash contact
+  googlePayIdentifier: "dylangrow27@gmail.com", // Configurable Google Pay contact
   contributorCount: 1,             // Reset to 1 contribution (covering textbook)
   daysRemaining: 24
 };
@@ -104,7 +104,149 @@ let waitingWorker: ServiceWorker | null = null;
 let deferredPrompt: any = null;
 
 /**
- * Fix 2: Frame-Busting logic (Defense-in-Depth anti-clickjacking check)
+ * Interactive Particle Network Engine
+ */
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+}
+
+let particles: Particle[] = [];
+const particleCount = 45;
+let canvas: HTMLCanvasElement | null = null;
+let ctx: CanvasRenderingContext2D | null = null;
+let mouseX = 0;
+let mouseY = 0;
+let isMouseActive = false;
+
+function initParticles(): void {
+  canvas = document.getElementById('particle-canvas') as HTMLCanvasElement | null;
+  if (!canvas) return;
+  ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  resizeCanvas();
+  particles = [];
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      radius: Math.random() * 1.2 + 0.8
+    });
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    isMouseActive = true;
+  });
+  window.addEventListener('mouseleave', () => {
+    isMouseActive = false;
+  });
+
+  animateParticles();
+}
+
+function resizeCanvas(): void {
+  if (!canvas) return;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function getPrimaryThemeColor(): string {
+  return getComputedStyle(document.body).getPropertyValue('--color-primary-rgb').trim() || '16, 185, 129';
+}
+
+function animateParticles(): void {
+  if (!canvas || !ctx) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const themeColor = getPrimaryThemeColor();
+
+  particles.forEach((p) => {
+    p.x += p.vx;
+    p.y += p.vy;
+
+    if (p.x < 0 || p.x > canvas!.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas!.height) p.vy *= -1;
+
+    ctx!.beginPath();
+    ctx!.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx!.fillStyle = `rgba(${themeColor}, 0.2)`;
+    ctx!.fill();
+  });
+
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        const opacity = (1 - dist / 100) * 0.06;
+        ctx.strokeStyle = `rgba(${themeColor}, ${opacity})`;
+        ctx.stroke();
+      }
+    }
+  }
+
+  if (isMouseActive) {
+    particles.forEach((p) => {
+      const dx = p.x - mouseX;
+      const dy = p.y - mouseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 140) {
+        ctx!.beginPath();
+        ctx!.moveTo(p.x, p.y);
+        ctx!.lineTo(mouseX, mouseY);
+        const opacity = (1 - dist / 140) * 0.08;
+        ctx!.strokeStyle = `rgba(${themeColor}, ${opacity})`;
+        ctx!.stroke();
+      }
+    });
+  }
+
+  requestAnimationFrame(animateParticles);
+}
+
+/**
+ * 3D Hover Tilt Interactive Cards
+ */
+function initTiltEffects(): void {
+  const cards = document.querySelectorAll('.glass-hover');
+  cards.forEach((card) => {
+    const el = card as HTMLElement;
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = -(y - centerY) / (centerY / 5); // Subtle 3D tilt angle
+      const rotateY = (x - centerX) / (centerX / 5);
+
+      el.style.transform = `perspective(800px) scale(1.01) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      el.style.transition = 'transform 0.1s ease-out';
+    });
+
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = 'perspective(800px) scale(1) rotateX(0deg) rotateY(0deg)';
+      el.style.transition = 'all 0.5s cubic-bezier(0.23, 1, 0.32, 1)';
+    });
+  });
+}
+
+/**
+ * Outbound referrers / Defense anti-clickjacking check
  */
 function preventClickjacking(): void {
   if (window.self !== window.top) {
@@ -119,7 +261,7 @@ function preventClickjacking(): void {
 }
 
 /**
- * Formats a number as USD currency.
+ * Formats value as currency.
  */
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat('en-US', {
@@ -138,11 +280,11 @@ function updateRoadmapProgress(raised: number): void {
     if (raised >= 20) {
       msStatus1.textContent = "COMPLETED";
       msStatus1.className = "text-[9px] font-mono font-bold text-theme-primary transition-colors duration-300";
-      msDot1.className = "absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-theme-primary ring-4 ring-zinc-950 transition-colors duration-300";
+      msDot1.className = "absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-theme-primary milestone-glow ring-4 ring-zinc-950 transition-all duration-300";
     } else {
       msStatus1.textContent = "PENDING";
       msStatus1.className = "text-[9px] font-mono font-bold text-zinc-500";
-      msDot1.className = "absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-800 ring-4 ring-zinc-950 transition-colors duration-300";
+      msDot1.className = "absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-zinc-800 ring-4 ring-zinc-950 transition-all duration-300";
     }
   }
 
@@ -151,15 +293,15 @@ function updateRoadmapProgress(raised: number): void {
     if (raised >= 431) {
       msStatus2.textContent = "COMPLETED";
       msStatus2.className = "text-[9px] font-mono font-bold text-theme-primary transition-colors duration-300";
-      msDot2.className = "absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-theme-primary ring-4 ring-zinc-950 transition-colors duration-300";
+      msDot2.className = "absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-theme-primary milestone-glow ring-4 ring-zinc-950 transition-all duration-300";
     } else if (raised >= 20) {
       msStatus2.textContent = "IN PROGRESS";
       msStatus2.className = "text-[9px] font-mono font-bold text-indigo-400 transition-colors duration-300";
-      msDot2.className = "absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-500 ring-4 ring-zinc-950 transition-colors duration-300";
+      msDot2.className = "absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-indigo-500 ring-4 ring-zinc-950 transition-all duration-300";
     } else {
       msStatus2.textContent = "PENDING";
       msStatus2.className = "text-[9px] font-mono font-bold text-zinc-500";
-      msDot2.className = "absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-850 ring-4 ring-zinc-950 transition-colors duration-300";
+      msDot2.className = "absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-zinc-850 ring-4 ring-zinc-950 transition-all duration-300";
     }
   }
 
@@ -168,15 +310,15 @@ function updateRoadmapProgress(raised: number): void {
     if (raised >= 431) {
       msStatus3.textContent = "COMPLETED";
       msStatus3.className = "text-[9px] font-mono font-bold text-theme-primary transition-colors duration-300";
-      msDot3.className = "absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-theme-primary ring-4 ring-zinc-950 transition-colors duration-300";
+      msDot3.className = "absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-theme-primary milestone-glow ring-4 ring-zinc-950 transition-all duration-300";
     } else if (raised >= 200) {
       msStatus3.textContent = "IN PROGRESS";
       msStatus3.className = "text-[9px] font-mono font-bold text-indigo-400 transition-colors duration-300";
-      msDot3.className = "absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-500 ring-4 ring-zinc-950 transition-colors duration-300";
+      msDot3.className = "absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-indigo-500 ring-4 ring-zinc-950 transition-all duration-300";
     } else {
       msStatus3.textContent = "PENDING";
       msStatus3.className = "text-[9px] font-mono font-bold text-zinc-650";
-      msDot3.className = "absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 ring-4 ring-zinc-950 transition-colors duration-300";
+      msDot3.className = "absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-zinc-900 ring-4 ring-zinc-950 transition-all duration-300";
     }
   }
 
@@ -185,11 +327,11 @@ function updateRoadmapProgress(raised: number): void {
     if (raised >= 431) {
       msStatus4.textContent = "SCHEDULED";
       msStatus4.className = "text-[9px] font-mono font-bold text-theme-primary transition-colors duration-300";
-      msDot4.className = "absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-theme-primary ring-4 ring-zinc-950 transition-colors duration-300";
+      msDot4.className = "absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-theme-primary milestone-glow ring-4 ring-zinc-950 transition-all duration-300";
     } else {
       msStatus4.textContent = "PENDING";
       msStatus4.className = "text-[9px] font-mono font-bold text-zinc-650";
-      msDot4.className = "absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 ring-4 ring-zinc-950 transition-colors duration-300";
+      msDot4.className = "absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-zinc-900 ring-4 ring-zinc-950 transition-all duration-300";
     }
   }
 }
@@ -212,7 +354,7 @@ function updateItemizedBudgetProgress(raised: number): void {
   if (materialsStatusEl) {
     if (materialsPercent >= 100) {
       materialsStatusEl.textContent = "SECURED";
-      materialsStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-theme-dark/30 text-theme-primary font-bold border border-theme-primary/10 transition-colors";
+      materialsStatusEl.className = "text-[9px] px-1.5 py-0.5 rounded bg-theme-dark/30 text-theme-primary font-bold border border-theme-primary/10 transition-colors";
       if (textbookSecuredBadgeEl) {
         textbookSecuredBadgeEl.classList.remove('hidden');
       }
@@ -222,10 +364,10 @@ function updateItemizedBudgetProgress(raised: number): void {
       }
       if (materialsPercent > 0) {
         materialsStatusEl.textContent = "FUNDING";
-        materialsStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-200 border border-zinc-700";
+        materialsStatusEl.className = "text-[9px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-200 border border-zinc-700";
       } else {
         materialsStatusEl.textContent = "PENDING";
-        materialsStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-500 border border-transparent";
+        materialsStatusEl.className = "text-[9px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-500 border border-transparent";
       }
     }
   }
@@ -241,19 +383,19 @@ function updateItemizedBudgetProgress(raised: number): void {
   if (voucherStatusEl) {
     if (voucherPercent >= 100) {
       voucherStatusEl.textContent = "SECURED";
-      voucherStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-theme-dark/30 text-theme-primary font-bold border border-theme-primary/10 transition-colors";
+      voucherStatusEl.className = "text-[9px] px-1.5 py-0.5 rounded bg-theme-dark/30 text-theme-primary font-bold border border-theme-primary/10 transition-colors";
     } else if (voucherPercent > 0) {
       voucherStatusEl.textContent = "FUNDING";
-      voucherStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-200 border border-zinc-700";
+      voucherStatusEl.className = "text-[9px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-200 border border-zinc-700";
     } else {
       voucherStatusEl.textContent = "PENDING";
-      voucherStatusEl.className = "text-[10px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-500 border border-transparent";
+      voucherStatusEl.className = "text-[9px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-500 border border-transparent";
     }
   }
 }
 
 /**
- * Calculates and updates progress metrics (bar width and percent label).
+ * Calculates progress fill & syncs metrics.
  */
 function updateProgress(): void {
   const progressRatio = CAMPAIGN_CONFIG.raisedAmount / CAMPAIGN_CONFIG.goalAmount;
@@ -267,15 +409,12 @@ function updateProgress(): void {
     progressFillEl.style.width = `${progressPercentage}%`;
   }
 
-  // Sync sub-item allocations
   updateItemizedBudgetProgress(CAMPAIGN_CONFIG.raisedAmount);
-  
-  // Sync milestone study roadmap
   updateRoadmapProgress(CAMPAIGN_CONFIG.raisedAmount);
 }
 
 /**
- * Calculates and updates the Contribution Impact Estimator text block.
+ * Contribution Impact calculator
  */
 function calculateContributionImpact(amount: number): void {
   if (isNaN(amount) || amount <= 0) {
@@ -311,7 +450,7 @@ function calculateContributionImpact(amount: number): void {
 }
 
 /**
- * Updates selected classes for preset chips.
+ * Preset active chip handler
  */
 function updateActivePresetChip(selectedAmount: number | null): void {
   estChips.forEach((chip) => {
@@ -319,15 +458,15 @@ function updateActivePresetChip(selectedAmount: number | null): void {
     const chipAmount = amountAttr ? parseFloat(amountAttr) : null;
     
     if (chipAmount === selectedAmount) {
-      chip.className = "est-chip px-3 py-1.5 bg-theme-primary text-zinc-950 font-bold border border-transparent text-xs font-mono rounded-lg transition-all cursor-pointer";
+      chip.className = "est-chip px-2.5 py-1.5 bg-theme-primary text-zinc-950 font-bold border border-transparent text-xs font-mono rounded-lg transition-all cursor-pointer";
     } else {
-      chip.className = "est-chip px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer";
+      chip.className = "est-chip px-2.5 py-1.5 bg-zinc-900/60 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer";
     }
   });
 }
 
 /**
- * Initializes preset chip event listeners.
+ * Estimator events initialization
  */
 function setupEstimatorEvents(): void {
   estChips.forEach((chip) => {
@@ -362,7 +501,7 @@ function setupEstimatorEvents(): void {
 }
 
 /**
- * Strict TypeScript DOM Initialization Guard
+ * Initializes variables in UI
  */
 function initializeCampaign(): void {
   document.title = CAMPAIGN_CONFIG.campaignName;
@@ -391,50 +530,48 @@ function initializeCampaign(): void {
 }
 
 /**
- * Generic copy function with brief UI feedback reset.
+ * Generic copy action
  */
 async function performCopy(text: string, btnTextEl: HTMLElement | null, triggerButton: HTMLElement | null): Promise<void> {
   try {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(text);
     } else {
-      throw new Error('Clipboard API blocked');
+      throw new Error('Clipboard blocked');
     }
 
     if (btnTextEl && triggerButton) {
       const originalText = btnTextEl.textContent || "COPY";
       btnTextEl.textContent = "COPIED";
       triggerButton.classList.remove('bg-theme-primary', 'hover:bg-theme-hover');
-      triggerButton.classList.add('bg-zinc-800', 'text-theme-primary', 'border', 'border-theme-primary/30');
+      triggerButton.classList.add('bg-zinc-850', 'text-theme-primary', 'border', 'border-theme-primary/30');
 
       if (srAnnouncementEl) {
-        srAnnouncementEl.textContent = `Copied address: ${text}`;
+        srAnnouncementEl.textContent = `Copied handle: ${text}`;
       }
 
       setTimeout(() => {
         btnTextEl.textContent = originalText;
         triggerButton.classList.add('bg-theme-primary', 'hover:bg-theme-hover');
-        triggerButton.classList.remove('bg-zinc-800', 'text-theme-primary', 'border', 'border-theme-primary/30');
-        triggerButton.focus(); // Restore key focus
+        triggerButton.classList.remove('bg-zinc-850', 'text-theme-primary', 'border', 'border-theme-primary/30');
+        triggerButton.focus();
         
         if (srAnnouncementEl) {
           srAnnouncementEl.textContent = "";
         }
-      }, 2000);
+      }, 1500);
     }
   } catch (err) {
-    console.error('Failed to copy: ', err);
-    if (srAnnouncementEl) srAnnouncementEl.textContent = "Copy blocked. Please select and copy manually.";
+    console.error('Copy blocked: ', err);
   }
 }
 
 /**
- * Copies the CashApp handle.
+ * CashApp Copy
  */
 async function copyCashAppToClipboard(): Promise<void> {
   const textToCopy = CAMPAIGN_CONFIG.cashAppHandle;
   
-  // Custom check icons toggle for CashApp primary button
   if (copyBtnTextEl && copyIconEl && successIconEl && copyButtonEl) {
     copyIconEl.classList.add('hidden');
     successIconEl.classList.remove('hidden');
@@ -444,37 +581,37 @@ async function copyCashAppToClipboard(): Promise<void> {
     setTimeout(() => {
       copyIconEl.classList.remove('hidden');
       successIconEl.classList.add('hidden');
-    }, 2000);
+    }, 1500);
   }
 }
 
 /**
- * Monitors and updates PWA online/offline status.
+ * Network / Encryption indicator status
  */
 function updateConnectionStatus(): void {
   if (pwaStatusEl && pwaStatusTextEl) {
     if (navigator.onLine) {
-      pwaStatusEl.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-zinc-900 bg-zinc-950 text-[10px] md:text-xs font-mono text-zinc-400";
-      pwaStatusTextEl.textContent = "ONLINE & ENCRYPTED";
+      pwaStatusEl.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-zinc-900 bg-zinc-950/60 text-[10px] md:text-xs font-mono text-zinc-400";
+      pwaStatusTextEl.textContent = "ONLINE & SECURE";
       
       const badgeIndicator = pwaStatusEl.querySelector('span');
       if (badgeIndicator) {
-        badgeIndicator.className = "w-2 h-2 rounded-full bg-theme-primary inline-block animate-ping transition-colors duration-300";
+        badgeIndicator.className = "w-1.5 h-1.5 rounded-full bg-theme-primary inline-block status-dot transition-colors duration-300";
       }
     } else {
-      pwaStatusEl.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-950/40 bg-amber-950/10 text-[10px] md:text-xs font-mono text-amber-500";
-      pwaStatusTextEl.textContent = "OFFLINE MODE - CACHED";
+      pwaStatusEl.className = "flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-950/40 bg-amber-950/15 text-[10px] md:text-xs font-mono text-amber-500";
+      pwaStatusTextEl.textContent = "OFFLINE - CACHED";
       
       const badgeIndicator = pwaStatusEl.querySelector('span');
       if (badgeIndicator) {
-        badgeIndicator.className = "w-2 h-2 rounded-full bg-amber-500 inline-block";
+        badgeIndicator.className = "w-1.5 h-1.5 rounded-full bg-amber-500 inline-block";
       }
     }
   }
 }
 
 /**
- * Cycle through available CSS themes and store selection in localStorage.
+ * Theme switcher
  */
 function cycleTheme(): void {
   const currentTheme = THEMES.find(t => document.body.classList.contains(t)) || 'theme-emerald';
@@ -488,7 +625,7 @@ function cycleTheme(): void {
 }
 
 /**
- * Restores the theme from localStorage on start.
+ * Load persisted theme
  */
 function loadPersistedTheme(): void {
   const savedTheme = localStorage.getItem(LOCAL_STORAGE_THEME_KEY);
@@ -501,7 +638,7 @@ function loadPersistedTheme(): void {
 }
 
 /**
- * Dev Simulator control: handles raised amount adjustment.
+ * Simulator controls
  */
 function handleSimRaisedInput(e: Event): void {
   const target = e.target as HTMLInputElement;
@@ -514,9 +651,6 @@ function handleSimRaisedInput(e: Event): void {
   updateProgress();
 }
 
-/**
- * Dev Simulator control: handles contributor count adjustment.
- */
 function handleSimContribInput(e: Event): void {
   const target = e.target as HTMLInputElement;
   const value = parseInt(target.value, 10);
@@ -528,7 +662,7 @@ function handleSimContribInput(e: Event): void {
 }
 
 /**
- * FAQ Accordion Keyboard Navigation & ARIA Synchronization
+ * FAQ expand keyboard navigation & ARIA sync
  */
 function setupDetailsA11y(): void {
   const detailsElements = document.querySelectorAll('details');
@@ -552,7 +686,7 @@ function setupDetailsA11y(): void {
 }
 
 /**
- * Setup Payment Method selector tab triggers.
+ * Setup Payment tab behaviors
  */
 function setupPaymentTabs(): void {
   const tabs = [tabCashApp, tabAppleCash, tabGooglePay];
@@ -561,17 +695,15 @@ function setupPaymentTabs(): void {
   tabs.forEach((tab, index) => {
     if (tab) {
       tab.addEventListener('click', () => {
-        // Toggle selected styling on tab headers
         tabs.forEach((t) => {
           if (t) {
             t.setAttribute('aria-selected', 'false');
-            t.className = "py-2 text-[10px] md:text-xs font-mono font-bold rounded-lg text-zinc-500 hover:text-zinc-300 cursor-pointer transition-all";
+            t.className = "py-2 text-[10px] font-mono font-bold rounded-lg text-zinc-500 hover:text-zinc-300 cursor-pointer transition-all";
           }
         });
         tab.setAttribute('aria-selected', 'true');
-        tab.className = "py-2 text-[10px] md:text-xs font-mono font-bold rounded-lg bg-zinc-900 text-theme-primary cursor-pointer transition-all";
+        tab.className = "py-2 text-[10px] font-mono font-bold rounded-lg bg-zinc-900 text-theme-primary cursor-pointer transition-all";
 
-        // Toggle visibility on panels
         panels.forEach((panel) => {
           if (panel) {
             panel.classList.add('hidden');
@@ -585,7 +717,6 @@ function setupPaymentTabs(): void {
     }
   });
 
-  // Attach copy button listeners for subpanels
   if (appleCopyBtnEl && appleCopyBtnTextEl) {
     appleCopyBtnEl.addEventListener('click', () => {
       performCopy(CAMPAIGN_CONFIG.appleCashIdentifier, appleCopyBtnTextEl, appleCopyBtnEl);
@@ -600,7 +731,7 @@ function setupPaymentTabs(): void {
 }
 
 /**
- * Sets up listeners for the PWA install button.
+ * setup PWA install banner
  */
 function setupInstallButton(): void {
   window.addEventListener('beforeinstallprompt', (e) => {
@@ -616,7 +747,7 @@ function setupInstallButton(): void {
       if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        console.log(`PWA installation choice outcome: ${outcome}`);
+        console.log(`Outcome choice: ${outcome}`);
         deferredPrompt = null;
         pwaInstallBtn.classList.add('hidden');
       }
@@ -628,7 +759,6 @@ function setupInstallButton(): void {
     if (pwaInstallBtn) {
       pwaInstallBtn.classList.add('hidden');
     }
-    console.log('PWA app installed successfully');
   });
 
   if (window.matchMedia('(display-mode: standalone)').matches || (navigator as any).standalone) {
@@ -638,9 +768,6 @@ function setupInstallButton(): void {
   }
 }
 
-/**
- * Display Reload Toast when waiting worker is detected
- */
 function showUpdateToast(worker: ServiceWorker): void {
   waitingWorker = worker;
   if (updateToastEl) {
@@ -648,16 +775,11 @@ function showUpdateToast(worker: ServiceWorker): void {
   }
 }
 
-/**
- * Register Progressive Web App with updatefound monitoring
- */
 function setupServiceWorker(): void {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js', { scope: './' })
         .then((reg) => {
-          console.log('PWA Service Worker registered with scope:', reg.scope);
-
           if (reg.waiting) {
             showUpdateToast(reg.waiting);
           }
@@ -674,7 +796,7 @@ function setupServiceWorker(): void {
           });
         })
         .catch((err) => {
-          console.warn('PWA Service Worker registration failed:', err);
+          console.warn('Worker registration error:', err);
         });
     });
 
@@ -725,8 +847,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeCampaign();
   setupDetailsA11y();
   setupEstimatorEvents();
-  setupPaymentTabs(); // Set up Apple Cash/GPay tabs
+  setupPaymentTabs();
   setupInstallButton();
   updateConnectionStatus();
   setupServiceWorker();
+  
+  // Interactive Overhauls
+  initParticles();
+  initTiltEffects();
 });

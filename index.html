@@ -7,35 +7,35 @@
     <!-- Strict Content Security Policy (CSP) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';" />
 
-    <!-- Fix 1: Outbound Referrer Leak Protection -->
+    <!-- Outbound Referrer Leak Protection -->
     <meta name="referrer" content="no-referrer" />
 
     <!-- Primary SEO Meta Tags -->
     <title>CompTIA Security+ Certification Fund</title>
     <meta name="title" content="CompTIA Security+ Certification Fund" />
-    <meta name="description" content="Help fund my path to earning the CompTIA Security+ certification. A secure, privacy-first, zero-dependency static crowdfunding campaign." />
+    <meta name="description" content="Help fund my path to earning the CompTIA Security+ credential. A secure, privacy-first, zero-dependency static crowdfunding campaign." />
     
     <!-- Robots and Crawler Indexing -->
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://dylangrow.github.io/CrowdFund/" id="canonical-link" />
+    <link class="canonical" href="https://dylangrow.github.io/CrowdFund/" id="canonical-link" rel="canonical" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dylangrow.github.io/CrowdFund/" />
     <meta property="og:title" content="CompTIA Security+ Certification Fund" />
-    <meta property="og:description" content="Help fund my path to earning the CompTIA Security+ certification. A secure, privacy-first, zero-dependency static crowdfunding campaign." />
+    <meta property="og:description" content="Help fund my path to earning the CompTIA Security+ credential. A secure, privacy-first, zero-dependency static crowdfunding campaign." />
     <meta property="og:image" content="favicon.svg" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://dylangrow.github.io/CrowdFund/" />
     <meta property="twitter:title" content="CompTIA Security+ Certification Fund" />
-    <meta property="twitter:description" content="Help fund my path to earning the CompTIA Security+ certification. A secure, privacy-first, zero-dependency static crowdfunding campaign." />
+    <meta property="twitter:description" content="Help fund my path to earning the CompTIA Security+ credential. A secure, privacy-first, zero-dependency static crowdfunding campaign." />
     <meta property="twitter:image" content="favicon.svg" />
 
     <!-- Theme & Icons -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="theme-color" content="#09090b" />
+    <meta name="theme-color" content="#030305" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="apple-touch-icon" href="favicon.svg" />
@@ -43,521 +43,569 @@
     <!-- PWA Web Manifest -->
     <link rel="manifest" href="manifest.json" />
   </head>
-  <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between font-sans antialiased selection:bg-theme-primary selection:text-zinc-950 overflow-x-hidden relative">
+  <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between font-sans antialiased selection:bg-theme-primary/30 selection:text-white overflow-x-hidden relative">
     
-    <!-- Animated Ambient Background Blobs -->
+    <!-- Interactive Particle Background Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Glowing Background Mesh Blobs -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      <div class="absolute -top-40 -left-40 w-96 h-96 bg-theme-primary/10 rounded-full blur-[120px] animate-float-1 transition-colors duration-500"></div>
-      <div class="absolute top-1/3 -right-20 w-96 h-96 bg-indigo-600/10 rounded-full blur-[140px] animate-float-2"></div>
-      <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-theme-primary/5 rounded-full blur-[100px] animate-float-1 transition-colors duration-500"></div>
+      <div class="absolute -top-40 -left-40 w-[500px] h-[500px] bg-theme-primary/10 rounded-full blur-[140px] blob-a transition-colors duration-500"></div>
+      <div class="absolute top-1/4 -right-20 w-[450px] h-[450px] bg-indigo-500/10 rounded-full blur-[130px] blob-b transition-colors duration-500"></div>
+      <div class="absolute -bottom-40 left-1/3 w-[550px] h-[550px] bg-theme-primary/5 rounded-full blur-[150px] blob-c transition-colors duration-500"></div>
+      
+      <!-- Subtle Scanline Grid overlay -->
+      <div class="absolute inset-0 bg-grid opacity-30"></div>
+      <div class="absolute inset-0 bg-noise opacity-[0.03]"></div>
     </div>
 
     <!-- Header -->
-    <header class="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300 relative">
-      <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <!-- Security Shield Logo -->
-          <svg class="w-6 h-6 text-theme-primary animate-pulse transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-          </svg>
-          <span id="header-badge" class="font-mono font-bold tracking-wider text-sm text-zinc-200">Dylan Grow's Sec + Funding</span>
+    <header class="border-b border-zinc-900/60 bg-zinc-950/70 backdrop-blur-xl sticky top-0 z-50 transition-colors duration-300">
+      <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <!-- Cyber Shield Logo -->
+          <div class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800">
+            <svg class="w-4.5 h-4.5 text-theme-primary transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
+            <span class="absolute inset-0 rounded-lg bg-theme-primary/10 animate-ping opacity-25"></span>
+          </div>
+          <span id="header-badge" class="font-mono font-bold tracking-widest text-xs text-zinc-300">Dylan Grow's Sec + Funding</span>
         </div>
         <div class="flex items-center gap-3">
           <!-- Theme Switcher Button -->
-          <button id="theme-switcher" type="button" class="flex items-center justify-center p-2 rounded-lg border border-zinc-900 bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white cursor-pointer transition-colors" aria-label="Switch security theme" title="Cycle campaign theme">
+          <button id="theme-switcher" type="button" class="flex items-center justify-center p-2.5 rounded-xl border border-zinc-900 bg-zinc-950/50 hover:bg-zinc-900 hover:border-zinc-800 text-zinc-400 hover:text-white cursor-pointer transition-all active:scale-95" aria-label="Switch security theme" title="Cycle theme mode">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M10.75 10.75l6.402-6.402a3.75 3.75 0 115.304 5.304l-6.403 6.402m0 0l-1.5 1.5a3.75 3.75 0 01-5.304-5.304l1.5-1.5" />
             </svg>
           </button>
 
-          <!-- PWA Install Button (Hidden by default, toggled via JS) -->
-          <button id="pwa-install-btn" type="button" class="hidden flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border border-theme-primary/30 bg-theme-dark/10 hover:bg-theme-dark/20 text-theme-primary text-xs font-mono font-bold cursor-pointer transition-colors" aria-label="Install App" title="Install App to Desktop/Mobile">
+          <!-- PWA Install Button -->
+          <button id="pwa-install-btn" type="button" class="hidden flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl border border-theme-primary/30 bg-theme-dark/10 hover:bg-theme-dark/25 text-theme-primary text-xs font-mono font-bold cursor-pointer transition-all active:scale-95" aria-label="Install App" title="Install App to device">
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m0 0l-3-3m3 3l3-3m-9 6h12" />
             </svg>
             INSTALL
           </button>
           
-          <!-- Connection / PWA Indicator -->
-          <div id="pwa-status" class="flex items-center gap-1.5 px-3 py-1 rounded-full border border-zinc-900 bg-zinc-950 text-[10px] md:text-xs font-mono text-zinc-400" aria-label="Status: Secure & Online">
-            <span class="w-2 h-2 rounded-full bg-theme-primary inline-block animate-ping transition-colors duration-300"></span>
-            <span id="pwa-status-text">ONLINE & ENCRYPTED</span>
+          <!-- Encrypted Indicator -->
+          <div id="pwa-status" class="flex items-center gap-1.5 px-3 py-1 rounded-full border border-zinc-900 bg-zinc-950/60 text-[10px] md:text-xs font-mono text-zinc-400" aria-label="Status Indicator">
+            <span class="w-1.5 h-1.5 rounded-full bg-theme-primary inline-block status-dot transition-colors duration-300"></span>
+            <span id="pwa-status-text">ONLINE &amp; SECURE</span>
           </div>
         </div>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 md:py-16 flex flex-col justify-center gap-12 relative z-10">
+    <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-8 md:py-16 flex flex-col justify-center gap-10 md:gap-14 relative z-10">
       
-      <!-- Hero Header -->
-      <section class="text-center space-y-4" aria-labelledby="campaign-title">
-        <h1 id="campaign-title" class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent">
-          CompTIA Security+<br class="hidden sm:inline" /> Certification Fund
+      <!-- Hero Section -->
+      <section class="text-center space-y-4 md:space-y-5" aria-labelledby="campaign-title">
+        <!-- Live Alert / Subtitle Badge -->
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900/80 border border-zinc-800 backdrop-blur-md text-[10px] md:text-xs font-mono font-bold tracking-widest text-zinc-400">
+          <span class="w-1.5 h-1.5 rounded-full bg-theme-primary animate-pulse"></span>
+          ACTIVE SECURITY DEVELOPMENT PORTFOLIO
+        </div>
+        
+        <h1 id="campaign-title" class="text-4xl md:text-6xl font-black tracking-tight leading-none">
+          <span class="text-white">CompTIA</span>
+          <span class="text-shimmer">Security+</span>
+          <br />
+          <span class="text-zinc-400 text-3xl md:text-5xl font-extrabold block mt-2">Certification Fund</span>
         </h1>
-        <p class="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-          Help fund my path to earning the industry-standard CompTIA Security+ credential. 
-          A zero-tracker, direct crowdfunding initiative built to secure the future.
+        
+        <p class="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-normal">
+          Help sponsor my journey towards earning the benchmark cybersecurity industry credential. Built as a zero-fee, zero-tracking, privacy-first peer campaign.
         </p>
+
+        <div class="hero-line my-4 max-w-md mx-auto"></div>
       </section>
 
-      <!-- Funding Module (Glassmorphic Card) -->
-      <section class="relative rounded-3xl border border-zinc-900 bg-zinc-900/30 backdrop-blur-xl p-6 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden hover-glow-card" aria-label="Funding status and contribution details">
+      <!-- Main Widget Card (Glassmorphic) -->
+      <section class="relative rounded-3xl glass p-6 md:p-10 shadow-[0_30px_70px_rgba(0,0,0,0.7)] overflow-hidden card-enter" aria-label="Campaign Overview">
         
-        <!-- Glow Effect Behind Card -->
-        <div class="absolute -top-40 -left-40 w-80 h-80 bg-theme-primary/10 rounded-full blur-[100px] pointer-events-none transition-colors duration-500"></div>
-        <div class="absolute -bottom-40 -right-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <!-- Subtle Glow Orbs in card -->
+        <div class="absolute -top-32 -left-32 w-72 h-72 bg-theme-primary/10 rounded-full blur-[90px] pointer-events-none transition-colors duration-500"></div>
+        <div class="absolute -bottom-32 -right-32 w-72 h-72 bg-indigo-500/10 rounded-full blur-[90px] pointer-events-none"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch relative z-10">
           
-          <!-- Left Column: Metrics & Progress Bar -->
-          <div class="md:col-span-7 space-y-6">
-            <div class="flex justify-between items-baseline">
-              <div class="space-y-1">
-                <span class="text-xs font-mono tracking-widest text-theme-primary uppercase transition-colors duration-300">Total Funding Secured</span>
-                <div class="text-3xl md:text-4xl font-extrabold flex items-baseline gap-1">
-                  <span id="raised-amount" class="text-white">$0.00</span>
-                  <span class="text-zinc-500 text-sm font-medium">raised of <span id="goal-amount">$0.00</span></span>
+          <!-- Left metrics panel -->
+          <div class="lg:col-span-7 flex flex-col justify-between space-y-6">
+            
+            <div class="space-y-4">
+              <span class="text-xs font-mono font-bold tracking-widest text-theme-primary uppercase transition-colors duration-300">Target Progress Status</span>
+              
+              <div class="grid grid-cols-2 gap-4">
+                <!-- Raised Box -->
+                <div class="bg-zinc-950/40 p-4 rounded-2xl border border-zinc-900">
+                  <span class="text-[10px] font-mono text-zinc-500 uppercase block tracking-wider">Total Raised</span>
+                  <div class="text-2xl md:text-3xl font-extrabold text-white mt-1" id="raised-amount">$0.00</div>
+                </div>
+                <!-- Goal Box -->
+                <div class="bg-zinc-950/40 p-4 rounded-2xl border border-zinc-900">
+                  <span class="text-[10px] font-mono text-zinc-500 uppercase block tracking-wider">Campaign Target</span>
+                  <div class="text-2xl md:text-3xl font-extrabold text-zinc-400 mt-1" id="goal-amount">$0.00</div>
                 </div>
               </div>
-              <div class="text-right">
-                <span id="progress-percent" class="text-2xl md:text-3xl font-extrabold text-theme-primary font-mono transition-colors duration-300">0%</span>
+            </div>
+
+            <!-- Progress Bar Frame -->
+            <div class="space-y-2">
+              <div class="flex justify-between items-baseline text-xs font-mono">
+                <span class="text-zinc-500">Milestone Allocations</span>
+                <span id="progress-percent" class="text-sm font-bold text-theme-primary text-glow transition-colors duration-300">0%</span>
+              </div>
+              <div class="w-full h-5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-900 p-0.5 relative">
+                <div id="progress-fill" class="h-full rounded-full bg-theme-primary transition-all duration-1000 ease-out progress-bar progress-striped shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.3)]" style="width: 0%"></div>
               </div>
             </div>
 
-            <!-- Progress Bar -->
-            <div class="w-full h-4 bg-zinc-950 rounded-full overflow-hidden border border-zinc-850 relative">
-              <div id="progress-fill" class="h-full rounded-full bg-theme-primary transition-all duration-1000 ease-out shadow-theme-glow progress-bar-shimmer" style="width: 0%"></div>
-            </div>
-
-            <!-- Additional Micro Metrics -->
-            <div class="grid grid-cols-3 gap-2 py-2 border-t border-b border-zinc-850 font-mono text-[10px] md:text-xs text-zinc-400">
+            <!-- Quick stats bar -->
+            <div class="grid grid-cols-3 gap-2 py-3 border-t border-b border-zinc-900 font-mono text-[10px] md:text-xs text-zinc-400">
               <div class="text-center py-1">
-                <span class="block text-zinc-500">CONTRIBUTIONS</span>
-                <span id="contribution-count" class="font-bold text-white text-sm mt-0.5">0</span>
+                <span class="block text-zinc-500">CONTRIBUTORS</span>
+                <span id="contribution-count" class="font-extrabold text-white text-sm mt-0.5">0</span>
               </div>
-              <div class="text-center py-1 border-x border-zinc-850">
-                <span class="block text-zinc-500">DAYS LEFT</span>
-                <span id="days-remaining" class="font-bold text-white text-sm mt-0.5">N/A</span>
+              <div class="text-center py-1 border-x border-zinc-900">
+                <span class="block text-zinc-500">DAYS REMAINING</span>
+                <span id="days-remaining" class="font-extrabold text-white text-sm mt-0.5">N/A</span>
               </div>
               <div class="text-center py-1">
-                <span class="block text-zinc-500">VERIFIED STATUS</span>
-                <span class="font-bold text-theme-primary text-sm mt-0.5 flex items-center justify-center gap-1 transition-colors duration-300">
-                  <svg class="w-3.5 h-3.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  SECURE
+                <span class="block text-zinc-500">ROUTING PROTOCOL</span>
+                <span class="font-extrabold text-theme-primary text-sm mt-0.5 flex items-center justify-center gap-1 transition-colors duration-300">
+                  <svg class="w-3.5 h-3.5 inline text-theme-primary" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.237-.1 2.451-.293 3.633l-1.92-1.92A11.95 11.95 0 0112 18c-3.11 0-5.932-1.182-8.055-3.13l-1.92 1.92A13.978 13.978 0 0012 21a13.978 13.978 0 009.975-4.21A11.959 11.959 0 0021 12z" />
+                  </svg>
+                  DIRECT
                 </span>
               </div>
             </div>
           </div>
 
-          <!-- Right Column: Contribution Call to Action -->
-          <div class="md:col-span-5 space-y-6 bg-zinc-950/40 p-6 rounded-2xl border border-zinc-850/50 backdrop-blur-md">
-            <div class="space-y-2">
-              <h3 class="text-base font-bold text-zinc-200">How to Contribute</h3>
-              <p class="text-xs text-zinc-400 leading-relaxed">
-                Direct peer-to-peer transaction ensures zero processing fees. Select your preferred method:
-              </p>
-            </div>
-
-            <!-- Contribution Impact Estimator Widget -->
-            <div class="space-y-3 pt-1 border-t border-zinc-900">
-              <span class="block text-xs font-mono text-zinc-400 uppercase tracking-wider">Impact Estimator</span>
-              
-              <!-- Quick Preset Chips -->
-              <div class="flex flex-wrap gap-2" role="group" aria-label="Select preset contribution amount">
-                <button type="button" data-amount="10" class="est-chip px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer">$10</button>
-                <button type="button" data-amount="25" class="est-chip px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer">$25</button>
-                <button type="button" data-amount="50" class="est-chip px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer">$50</button>
-                <button type="button" data-amount="100" class="est-chip px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer">$100</button>
-                <button type="button" data-amount="411" class="est-chip px-3 py-1.5 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer">$411</button>
+          <!-- Right contributions panel -->
+          <div class="lg:col-span-5 flex flex-col justify-between bg-zinc-950/30 p-5 md:p-6 rounded-2xl border border-zinc-900 backdrop-blur-md">
+            
+            <div class="space-y-4">
+              <div>
+                <h3 class="text-sm font-extrabold text-zinc-200">Submit Contribution</h3>
+                <p class="text-[11px] text-zinc-500 leading-relaxed mt-1">
+                  100% peer-to-peer routing with zero platform transaction deductions.
+                </p>
               </div>
 
-              <!-- Custom value input -->
-              <div class="flex items-center gap-2 p-1 bg-zinc-900 rounded-xl border border-zinc-800 group focus-within:border-theme-primary/50 transition-colors">
-                <span class="pl-3 text-zinc-500 font-mono text-xs">$</span>
-                <input id="estimator-input" type="number" min="1" max="10000" placeholder="Custom amount" class="bg-transparent border-none text-zinc-100 font-mono text-xs w-full outline-none py-1" aria-label="Custom contribution amount for estimation" />
+              <!-- Payment Tabs Navigation -->
+              <div class="grid grid-cols-3 gap-1 p-0.5 bg-zinc-950 rounded-xl border border-zinc-900" role="tablist" aria-label="Payment Platforms">
+                <button id="tab-cashapp" type="button" role="tab" aria-selected="true" aria-controls="panel-cashapp" class="py-2 text-[10px] font-mono font-bold rounded-lg bg-zinc-900 text-theme-primary cursor-pointer transition-all">CASHAPP</button>
+                <button id="tab-applecash" type="button" role="tab" aria-selected="false" aria-controls="panel-applecash" class="py-2 text-[10px] font-mono font-bold rounded-lg text-zinc-500 hover:text-zinc-300 cursor-pointer transition-all">APPLE CASH</button>
+                <button id="tab-googlepay" type="button" role="tab" aria-selected="false" aria-controls="panel-googlepay" class="py-2 text-[10px] font-mono font-bold rounded-lg text-zinc-500 hover:text-zinc-300 cursor-pointer transition-all">G-PAY</button>
               </div>
 
-              <!-- Impact Message Output -->
-              <div id="estimator-impact" class="text-[11px] text-theme-primary bg-theme-dark/10 border border-theme-primary/10 rounded-xl p-3 font-mono leading-relaxed transition-colors duration-300">
-                Loading impact estimation...
-              </div>
-            </div>
-
-            <!-- Payment Methods Subpanels -->
-            <div class="space-y-4 pt-2 border-t border-zinc-900">
-              <span class="block text-xs font-mono text-zinc-400 uppercase tracking-wider">Payment Method</span>
-              
-              <!-- Tab Header Bar -->
-              <div class="grid grid-cols-3 gap-1 p-0.5 bg-zinc-950 rounded-xl border border-zinc-900" role="tablist" aria-label="Contribution platform options">
-                <button id="tab-cashapp" type="button" role="tab" aria-selected="true" aria-controls="panel-cashapp" class="py-2 text-[10px] md:text-xs font-mono font-bold rounded-lg bg-zinc-900 text-theme-primary cursor-pointer transition-all">CASHAPP</button>
-                <button id="tab-applecash" type="button" role="tab" aria-selected="false" aria-controls="panel-applecash" class="py-2 text-[10px] md:text-xs font-mono font-bold rounded-lg text-zinc-500 hover:text-zinc-300 cursor-pointer transition-all">APPLE CASH</button>
-                <button id="tab-googlepay" type="button" role="tab" aria-selected="false" aria-controls="panel-googlepay" class="py-2 text-[10px] md:text-xs font-mono font-bold rounded-lg text-zinc-500 hover:text-zinc-300 cursor-pointer transition-all">GOOGLE PAY</button>
-              </div>
-
-              <!-- Panel 1: CashApp -->
-              <div id="panel-cashapp" role="tabpanel" aria-labelledby="tab-cashapp" class="space-y-3">
-                <div class="space-y-2">
-                  <div class="flex items-center gap-2 p-1 bg-zinc-900 rounded-xl border border-zinc-800 group focus-within:border-theme-primary/50 transition-colors">
+              <!-- Payment Panels -->
+              <div class="space-y-3 pt-1">
+                <!-- Panel 1: CashApp -->
+                <div id="panel-cashapp" role="tabpanel" aria-labelledby="tab-cashapp" class="space-y-3">
+                  <div class="flex items-center gap-2 p-1.5 bg-zinc-900/60 rounded-xl border border-zinc-900 group focus-within:border-theme-primary/30 transition-all">
                     <input id="cashapp-handle-input" type="text" readonly value="$LordGrow" autocomplete="off" spellcheck="false" class="bg-transparent border-none text-zinc-100 font-mono font-bold text-sm w-full pl-3 outline-none select-all" aria-label="CashApp handle" />
-                    <button id="copy-button" type="button" class="flex items-center justify-center gap-1.5 px-4 py-2 bg-theme-primary hover:bg-theme-hover text-zinc-950 font-bold text-xs rounded-lg transition-all duration-200 active:scale-95 shadow-[0_4px_12px_rgba(var(--color-primary-rgb),0.2)] focus:outline-none focus:ring-2 focus:ring-theme-primary/50 cursor-pointer" aria-describedby="copy-instructions">
-                      <svg id="copy-icon" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0015 2.25h-1.5a2.251 2.251 0 00-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z" />
+                    <button id="copy-button" type="button" class="flex items-center justify-center gap-1.5 px-3 py-2 bg-theme-primary hover:bg-theme-hover text-zinc-950 font-extrabold text-xs rounded-lg transition-all active:scale-95 cursor-pointer">
+                      <svg id="copy-icon" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25" />
                       </svg>
-                      <svg id="success-icon" class="w-4 h-4 hidden text-zinc-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor">
+                      <svg id="success-icon" class="w-3.5 h-3.5 hidden text-zinc-950" fill="none" viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                       <span id="copy-btn-text">COPY</span>
                     </button>
                   </div>
+                  <a id="cashapp-link" href="https://cash.app/$LordGrow" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800/80 rounded-xl font-bold text-xs tracking-wider transition-all hover:text-theme-primary">
+                    OPEN CASH.APP
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                  </a>
                 </div>
-                <a id="cashapp-link" href="https://cash.app/$LordGrow" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 hover:bg-zinc-850 text-zinc-200 border border-zinc-800 rounded-xl font-bold text-xs tracking-wider transition-all duration-200 hover:text-theme-primary">
-                  OPEN CASH.APP
-                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                </a>
-              </div>
 
-              <!-- Panel 2: Apple Cash -->
-              <div id="panel-applecash" role="tabpanel" aria-labelledby="tab-applecash" class="space-y-3 hidden animate-[sweep_0.25s_ease-out]">
-                <p class="text-[11px] text-zinc-400 leading-relaxed font-mono">
-                  Apple Cash can be sent directly via iMessage using the contact Apple ID email below.
-                </p>
-                <div class="flex items-center gap-2 p-1 bg-zinc-900 rounded-xl border border-zinc-800 group focus-within:border-theme-primary/50 transition-colors">
-                  <input id="applecash-handle-input" type="text" readonly value="your-apple-id@email.com" autocomplete="off" spellcheck="false" class="bg-transparent border-none text-zinc-100 font-mono font-bold text-[11px] w-full pl-3 outline-none select-all animate-[sweep_0.25s_ease-out]" aria-label="Apple Cash contact address" />
-                  <button id="apple-copy-btn" type="button" class="flex items-center justify-center gap-1.5 px-4 py-2 bg-theme-primary hover:bg-theme-hover text-zinc-950 font-bold text-xs rounded-lg transition-all duration-200 active:scale-95 shadow-[0_4px_12px_rgba(var(--color-primary-rgb),0.2)] focus:outline-none focus:ring-2 focus:ring-theme-primary/50 cursor-pointer">
-                    <span id="apple-copy-btn-text">COPY</span>
-                  </button>
+                <!-- Panel 2: Apple Cash -->
+                <div id="panel-applecash" role="tabpanel" aria-labelledby="tab-applecash" class="space-y-3 hidden">
+                  <p class="text-[10px] text-zinc-500 font-mono leading-relaxed">
+                    Send Apple Cash transfers via iMessage utilizing the registered Apple ID email below.
+                  </p>
+                  <div class="flex items-center gap-2 p-1.5 bg-zinc-900/60 rounded-xl border border-zinc-900 group focus-within:border-theme-primary/30 transition-all">
+                    <input id="applecash-handle-input" type="text" readonly value="dylangrow27@gmail.com" autocomplete="off" spellcheck="false" class="bg-transparent border-none text-zinc-300 font-mono text-xs w-full pl-3 outline-none select-all" aria-label="Apple Cash Address" />
+                    <button id="apple-copy-btn" type="button" class="flex items-center justify-center gap-1.5 px-3 py-2 bg-theme-primary hover:bg-theme-hover text-zinc-950 font-extrabold text-xs rounded-lg transition-all active:scale-95 cursor-pointer">
+                      <span id="apple-copy-btn-text">COPY</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <!-- Panel 3: Google Pay -->
-              <div id="panel-googlepay" role="tabpanel" aria-labelledby="tab-googlepay" class="space-y-3 hidden animate-[sweep_0.25s_ease-out]">
-                <p class="text-[11px] text-zinc-400 leading-relaxed font-mono">
-                  Google Pay can be sent directly using the GPay account email address below.
-                </p>
-                <div class="flex items-center gap-2 p-1 bg-zinc-900 rounded-xl border border-zinc-800 group focus-within:border-theme-primary/50 transition-colors">
-                  <input id="googlepay-handle-input" type="text" readonly value="your-google-pay@email.com" autocomplete="off" spellcheck="false" class="bg-transparent border-none text-zinc-100 font-mono font-bold text-[11px] w-full pl-3 outline-none select-all animate-[sweep_0.25s_ease-out]" aria-label="Google Pay contact address" />
-                  <button id="google-copy-btn" type="button" class="flex items-center justify-center gap-1.5 px-4 py-2 bg-theme-primary hover:bg-theme-hover text-zinc-950 font-bold text-xs rounded-lg transition-all duration-200 active:scale-95 shadow-[0_4px_12px_rgba(var(--color-primary-rgb),0.2)] focus:outline-none focus:ring-2 focus:ring-theme-primary/50 cursor-pointer">
-                    <span id="google-copy-btn-text">COPY</span>
-                  </button>
+                <!-- Panel 3: Google Pay -->
+                <div id="panel-googlepay" role="tabpanel" aria-labelledby="tab-googlepay" class="space-y-3 hidden">
+                  <p class="text-[10px] text-zinc-500 font-mono leading-relaxed">
+                    Send Google Pay transfers directly utilizing the registered email address below.
+                  </p>
+                  <div class="flex items-center gap-2 p-1.5 bg-zinc-900/60 rounded-xl border border-zinc-900 group focus-within:border-theme-primary/30 transition-all">
+                    <input id="googlepay-handle-input" type="text" readonly value="dylangrow27@gmail.com" autocomplete="off" spellcheck="false" class="bg-transparent border-none text-zinc-300 font-mono text-xs w-full pl-3 outline-none select-all" aria-label="Google Pay Address" />
+                    <button id="google-copy-btn" type="button" class="flex items-center justify-center gap-1.5 px-3 py-2 bg-theme-primary hover:bg-theme-hover text-zinc-950 font-extrabold text-xs rounded-lg transition-all active:scale-95 cursor-pointer">
+                      <span id="google-copy-btn-text">COPY</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-            
+
+            <!-- Custom Calculator Section -->
+            <div class="space-y-3 mt-6 pt-5 border-t border-zinc-900">
+              <span class="block text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Impact Estimator</span>
+              
+              <!-- Fast Amount Presets -->
+              <div class="flex flex-wrap gap-1.5" role="group" aria-label="Quick selection chips">
+                <button type="button" data-amount="10" class="est-chip px-2.5 py-1.5 bg-zinc-900/60 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer">$10</button>
+                <button type="button" data-amount="25" class="est-chip px-2.5 py-1.5 bg-zinc-900/60 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer">$25</button>
+                <button type="button" data-amount="50" class="est-chip px-2.5 py-1.5 bg-zinc-900/60 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer">$50</button>
+                <button type="button" data-amount="100" class="est-chip px-2.5 py-1.5 bg-zinc-900/60 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer">$100</button>
+                <button type="button" data-amount="411" class="est-chip px-2.5 py-1.5 bg-zinc-900/60 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-mono rounded-lg transition-all cursor-pointer">$411</button>
+              </div>
+
+              <!-- Input -->
+              <div class="flex items-center gap-2 p-1.5 bg-zinc-900/60 rounded-xl border border-zinc-900 group focus-within:border-theme-primary/30 transition-all">
+                <span class="pl-2.5 text-zinc-500 font-mono text-xs">$</span>
+                <input id="estimator-input" type="number" min="1" max="10000" placeholder="Custom amount" class="bg-transparent border-none text-zinc-100 font-mono text-xs w-full outline-none py-1" aria-label="Estimate impact of contribution" />
+              </div>
+
+              <!-- Output block -->
+              <div id="estimator-impact" class="text-[11px] text-theme-primary bg-theme-dark/10 border border-theme-primary/10 rounded-xl p-3 font-mono leading-relaxed transition-all duration-300">
+                Loading...
+              </div>
+            </div>
+
           </div>
 
         </div>
       </section>
 
-      <!-- Study Roadmap & Candidate Connect Section -->
-      <section class="grid grid-cols-1 lg:grid-cols-12 gap-8" aria-label="Campaign study roadmap and candidate details">
+      <!-- Roadmap & Profile split section -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch" aria-label="Study Path & Profile">
         
-        <!-- Timeline Roadmap -->
-        <div class="lg:col-span-8 p-6 md:p-8 rounded-2xl border border-zinc-900 bg-zinc-950/40 space-y-6 hover-glow-card">
-          <h2 class="text-xl font-bold text-white flex items-center gap-2">
-            <svg class="w-5.5 h-5.5 text-theme-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
-            Certification Study Roadmap
-          </h2>
-          
-          <!-- Vertical Layout -->
-          <div class="relative pl-6 border-l-2 border-zinc-900 space-y-6">
+        <!-- Timeline roadmap card -->
+        <div class="lg:col-span-8 p-6 md:p-8 rounded-3xl border border-zinc-900/60 bg-zinc-950/40 glass-hover flex flex-col justify-between card-enter card-enter-delay-1">
+          <div class="space-y-6">
+            <h2 class="text-lg font-extrabold text-white flex items-center gap-2.5">
+              <svg class="w-5 h-5 text-theme-primary transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
+              </svg>
+              Certification Study Roadmap
+            </h2>
             
-            <!-- Milestone 1 -->
-            <div id="ms-node-1" class="relative">
-              <span id="ms-dot-1" class="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-800 ring-4 ring-zinc-950 transition-colors"></span>
-              <div class="space-y-1">
-                <div class="flex justify-between items-baseline">
-                  <h3 class="text-sm font-semibold text-white">Milestone 1: Purchase Study Guides</h3>
-                  <span id="ms-status-1" class="text-[9px] font-mono font-bold text-zinc-500">PENDING</span>
+            <div class="relative pl-7 border-l border-zinc-800 space-y-6 ml-3">
+              
+              <!-- Milestone 1 -->
+              <div id="ms-node-1" class="relative">
+                <span id="ms-dot-1" class="absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-zinc-800 ring-4 ring-zinc-950 transition-colors"></span>
+                <div class="space-y-1">
+                  <div class="flex justify-between items-baseline gap-2">
+                    <h3 class="text-xs font-bold text-white">Milestone 1: Purchase Study Guides</h3>
+                    <span id="ms-status-1" class="text-[9px] font-mono font-bold text-zinc-500">PENDING</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-500 leading-relaxed font-normal">
+                    Secure official SY0-701 practice guides, mock prep packages, and reference textbook. (Milestone: $20.00)
+                  </p>
                 </div>
-                <p class="text-xs text-zinc-500 leading-relaxed">
-                  Secure practice mock tests and SY0-701 guides to establish a structured training baseline. (Funded: $20.00)
-                </p>
               </div>
-            </div>
 
-            <!-- Milestone 2 -->
-            <div id="ms-node-2" class="relative">
-              <span id="ms-dot-2" class="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-850 ring-4 ring-zinc-950 transition-colors"></span>
-              <div class="space-y-1">
-                <div class="flex justify-between items-baseline">
-                  <h3 class="text-sm font-semibold text-zinc-300">Milestone 2: Training &amp; Video Courses</h3>
-                  <span id="ms-status-2" class="text-[9px] font-mono font-bold text-zinc-500">PENDING</span>
+              <!-- Milestone 2 -->
+              <div id="ms-node-2" class="relative">
+                <span id="ms-dot-2" class="absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-zinc-850 ring-4 ring-zinc-950 transition-colors"></span>
+                <div class="space-y-1">
+                  <div class="flex justify-between items-baseline gap-2">
+                    <h3 class="text-xs font-bold text-zinc-300">Milestone 2: Training &amp; Video Courses</h3>
+                    <span id="ms-status-2" class="text-[9px] font-mono font-bold text-zinc-500">PENDING</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-500 leading-relaxed font-normal">
+                    Consistently cover structured domain training, tracking security control frameworks, architecture, and threat vectors.
+                  </p>
                 </div>
-                <p class="text-xs text-zinc-500 leading-relaxed">
-                  Review 20+ hours of video course curriculum focusing on threat vectors, cryptography, and network defense architectures.
-                </p>
               </div>
-            </div>
 
-            <!-- Milestone 3 -->
-            <div id="ms-node-3" class="relative">
-              <span id="ms-dot-3" class="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 ring-4 ring-zinc-950 transition-colors"></span>
-              <div class="space-y-1">
-                <div class="flex justify-between items-baseline">
-                  <h3 class="text-sm font-semibold text-zinc-400">Milestone 3: Mock Exam Phase</h3>
-                  <span id="ms-status-3" class="text-[9px] font-mono font-bold text-zinc-650">PENDING</span>
+              <!-- Milestone 3 -->
+              <div id="ms-node-3" class="relative">
+                <span id="ms-dot-3" class="absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-zinc-900 ring-4 ring-zinc-950 transition-colors"></span>
+                <div class="space-y-1">
+                  <div class="flex justify-between items-baseline gap-2">
+                    <h3 class="text-xs font-bold text-zinc-400">Milestone 3: Mock Exam Assessment Phase</h3>
+                    <span id="ms-status-3" class="text-[9px] font-mono font-bold text-zinc-650">PENDING</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-500 leading-relaxed font-normal">
+                    Complete sample test assessments aiming for stable mock scores of 85% or better prior to exam booking.
+                  </p>
                 </div>
-                <p class="text-xs text-zinc-500 leading-relaxed">
-                  Complete multiple full-length mock exams targeting a consistent pass score of 85% or higher before scheduling the official exam.
-                </p>
               </div>
-            </div>
 
-            <!-- Milestone 4 -->
-            <div id="ms-node-4" class="relative">
-              <span id="ms-dot-4" class="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 ring-4 ring-zinc-950 transition-colors"></span>
-              <div class="space-y-1">
-                <div class="flex justify-between items-baseline">
-                  <h3 class="text-sm font-semibold text-zinc-400">Milestone 4: SY0-701 Certification Exam</h3>
-                  <span id="ms-status-4" class="text-[9px] font-mono font-bold text-zinc-650">PENDING</span>
+              <!-- Milestone 4 -->
+              <div id="ms-node-4" class="relative">
+                <span id="ms-dot-4" class="absolute -left-[36px] top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-zinc-900 ring-4 ring-zinc-950 transition-colors"></span>
+                <div class="space-y-1">
+                  <div class="flex justify-between items-baseline gap-2">
+                    <h3 class="text-xs font-bold text-zinc-400">Milestone 4: SY0-701 Certification Exam</h3>
+                    <span id="ms-status-4" class="text-[9px] font-mono font-bold text-zinc-650">PENDING</span>
+                  </div>
+                  <p class="text-[11px] text-zinc-500 leading-relaxed font-normal">
+                    Schedule, take, and complete the official CompTIA Sec+ certification examination. (Voucher Expense: $411.00)
+                  </p>
                 </div>
-                <p class="text-xs text-zinc-500 leading-relaxed">
-                  Book and sit for the official CompTIA Security+ examination. (Exam cost target: $411.00)
-                </p>
               </div>
-            </div>
 
+            </div>
           </div>
         </div>
 
-        <!-- Candidate Connect Card -->
-        <div class="lg:col-span-4 p-6 md:p-8 rounded-2xl border border-zinc-900 bg-zinc-950/40 flex flex-col justify-between gap-6 relative overflow-hidden hover-glow-card">
-          <div class="space-y-4">
-            <h2 class="text-xl font-bold text-white flex items-center gap-2">
-              <svg class="w-5.5 h-5.5 text-theme-primary transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+        <!-- Candidate Profile Card -->
+        <div class="lg:col-span-4 p-6 md:p-8 rounded-3xl border border-zinc-900/60 bg-zinc-950/40 glass-hover flex flex-col justify-between gap-6 card-enter card-enter-delay-2">
+          <div class="space-y-5">
+            <h2 class="text-lg font-extrabold text-white flex items-center gap-2">
+              <svg class="w-5 h-5 text-theme-primary transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
               Candidate Profile
             </h2>
-            <div class="space-y-3 text-xs leading-relaxed text-zinc-400 font-mono">
-              <p class="text-sm font-bold text-zinc-200">Dylan Grow</p>
-              <p class="text-[10px] text-zinc-500">ASPIRING SECURITY ANALYST</p>
-              <p>
-                Building secure, private-first applications while pursuing credentials to validate defensive security architectures.
-              </p>
+            
+            <div class="space-y-4">
+              <div>
+                <span class="text-[9px] font-mono text-zinc-500 uppercase block tracking-widest">Candidate Name</span>
+                <span class="text-sm font-bold text-zinc-200 mt-1 block">Dylan Grow</span>
+              </div>
+              <div>
+                <span class="text-[9px] font-mono text-zinc-500 uppercase block tracking-widest">Aspiration Goal</span>
+                <span class="text-xs text-zinc-400 mt-1 block">Junior Security Analyst / PWA Developer</span>
+              </div>
+              <div>
+                <span class="text-[9px] font-mono text-zinc-500 uppercase block tracking-widest">Brief</span>
+                <p class="text-xs text-zinc-500 leading-relaxed mt-1">
+                  Enthusiastic about defensive security, cryptography, and zero-tracking web systems design.
+                </p>
+              </div>
             </div>
           </div>
-          
-          <div class="space-y-2.5 pt-4 border-t border-zinc-900">
-            <a href="https://dylangrow.github.io/DG/" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full py-3 bg-zinc-900/50 hover:bg-zinc-850 text-zinc-200 border border-zinc-800 rounded-xl font-bold text-xs tracking-wider transition-all duration-200 hover:text-theme-primary focus:outline-none focus:ring-2 focus:ring-theme-primary/50">
-              <svg class="w-4 h-4 text-theme-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+
+          <div class="space-y-2 pt-4 border-t border-zinc-900">
+            <a href="https://dylangrow.github.io/DG/" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full py-3 bg-zinc-900/50 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 rounded-xl font-bold text-xs tracking-wider transition-all hover:text-theme-primary">
+              <svg class="w-3.5 h-3.5 text-theme-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3" />
               </svg>
               PERSONAL WEBSITE
             </a>
-            <a href="https://www.linkedin.com/in/dgrow27/" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full py-3 bg-theme-primary hover:bg-theme-hover text-zinc-950 font-extrabold text-xs tracking-wider rounded-xl transition-all duration-200 active:scale-95 shadow-[0_4px_12px_rgba(var(--color-primary-rgb),0.2)] focus:outline-none focus:ring-2 focus:ring-theme-primary/50">
-              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <a href="https://www.linkedin.com/in/dgrow27/" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full py-3 bg-theme-primary hover:bg-theme-hover text-zinc-950 font-extrabold text-xs tracking-wider rounded-xl transition-all active:scale-95 shadow-[0_4px_12px_rgba(var(--color-primary-rgb),0.2)]">
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
               </svg>
               CONNECT ON LINKEDIN
             </a>
           </div>
-        </div>
 
+        </div>
       </section>
 
-      <!-- Grid: Motivations & Security Trust Checklist -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Allocation breakdown & trust panels -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
         
-        <!-- Why CompTIA Security+ Card -->
-        <article class="p-6 md:p-8 rounded-2xl border border-zinc-900 bg-zinc-950/40 space-y-4 hover-glow-card" aria-labelledby="why-title">
-          <h2 id="why-title" class="text-xl font-bold text-white flex items-center gap-2">
-            <svg class="w-5.5 h-5.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
-            Why CompTIA Security+?
-          </h2>
-          <div class="space-y-4 text-sm text-zinc-400 leading-relaxed">
-            <p>
-              CompTIA Security+ is the global standard for establishing foundational cybersecurity skills. Earning this certificate validates core knowledge of security assessment, threat mitigation, and compliance.
-            </p>
+        <!-- Budget Breakdown details -->
+        <article class="p-6 md:p-8 rounded-3xl border border-zinc-900/60 bg-zinc-950/40 glass-hover flex flex-col justify-between card-enter card-enter-delay-3" aria-labelledby="budget-title">
+          <div class="space-y-5">
+            <h2 id="budget-title" class="text-lg font-extrabold text-white flex items-center gap-2.5">
+              <svg class="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292" />
+              </svg>
+              Itemized Campaign Budget
+            </h2>
             
-            <p class="font-semibold text-zinc-300">Campaign Budget Allocation:</p>
-            <div class="space-y-3.5 font-mono text-xs pt-1">
-              
+            <div class="space-y-4">
               <!-- Item 1: Study Materials -->
-              <div id="budget-item-materials" class="space-y-1 p-2.5 rounded-lg border border-zinc-900 bg-zinc-950/20">
+              <div id="budget-item-materials" class="space-y-2 p-3.5 rounded-2xl border border-zinc-900 bg-zinc-950/20">
                 <div class="flex justify-between items-center">
-                  <span class="text-zinc-300 font-medium">1. Study Guide &amp; Practice Materials</span>
-                  <span id="materials-status" class="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-500">PENDING</span>
+                  <span class="text-xs font-bold text-zinc-300">1. Reference Study Materials</span>
+                  <span id="materials-status" class="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-zinc-800 text-zinc-500">PENDING</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <div class="w-full h-1 bg-zinc-900 rounded-full overflow-hidden">
-                    <div id="materials-progress" class="h-full bg-theme-primary transition-all duration-300 progress-bar-shimmer" style="width: 0%"></div>
+                  <div class="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-900 p-0.5">
+                    <div id="materials-progress" class="h-full bg-theme-primary rounded-full transition-all duration-300" style="width: 0%"></div>
                   </div>
-                  <span id="materials-percent" class="text-[10px] text-zinc-500">0%</span>
+                  <span id="materials-percent" class="text-[10px] font-mono text-zinc-500">0%</span>
                 </div>
-                <div class="text-[9px] text-zinc-500 flex justify-between">
+                <div class="text-[10px] font-mono text-zinc-500 flex justify-between">
                   <span>Target: $20.00</span>
                   <span id="materials-funded-val">Funded: $0.00</span>
                 </div>
               </div>
 
-              <!-- Textbook Secured Alert Badge -->
-              <div id="textbook-secured-badge" class="hidden text-[10px] text-theme-primary/90 font-mono flex items-center gap-1.5 bg-theme-primary/5 p-2.5 rounded-xl border border-theme-primary/10 transition-all duration-300">
-                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                TEXTBOOK SECURED! Focus is now on the remaining exam voucher expense.
+              <!-- Dynamic alert textbook banner -->
+              <div id="textbook-secured-badge" class="hidden text-[10px] text-theme-primary/90 font-mono flex items-center gap-2 bg-theme-primary/5 p-3 rounded-2xl border border-theme-primary/10 transition-all duration-300">
+                <span class="flex h-1.5 w-1.5 rounded-full bg-theme-primary animate-ping"></span>
+                Milestone 1 secured! Secondary campaign goal actively targeting voucher.
               </div>
 
               <!-- Item 2: Exam Voucher -->
-              <div id="budget-item-voucher" class="space-y-1 p-2.5 rounded-lg border border-zinc-900 bg-zinc-950/20">
+              <div id="budget-item-voucher" class="space-y-2 p-3.5 rounded-2xl border border-zinc-900 bg-zinc-950/20">
                 <div class="flex justify-between items-center">
-                  <span class="text-zinc-300 font-medium">2. SY0-701 Exam Voucher</span>
-                  <span id="voucher-status" class="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-500">PENDING</span>
+                  <span class="text-xs font-bold text-zinc-300">2. SY0-701 Certification Voucher</span>
+                  <span id="voucher-status" class="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-zinc-800 text-zinc-500">PENDING</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <div class="w-full h-1 bg-zinc-900 rounded-full overflow-hidden">
-                    <div id="voucher-progress" class="h-full bg-theme-primary transition-all duration-300 progress-bar-shimmer" style="width: 0%"></div>
+                  <div class="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-900 p-0.5">
+                    <div id="voucher-progress" class="h-full bg-theme-primary rounded-full transition-all duration-300" style="width: 0%"></div>
                   </div>
-                  <span id="voucher-percent" class="text-[10px] text-zinc-500">0%</span>
+                  <span id="voucher-percent" class="text-[10px] font-mono text-zinc-500">0%</span>
                 </div>
-                <div class="text-[9px] text-zinc-500 flex justify-between">
+                <div class="text-[10px] font-mono text-zinc-500 flex justify-between">
                   <span>Target: $411.00</span>
                   <span id="voucher-funded-val">Funded: $0.00</span>
                 </div>
               </div>
-
             </div>
-
-            <p class="text-[10px] text-zinc-500">
-              Any amount exceeded will be donated directly to open-source privacy and security tool development.
-            </p>
           </div>
+          
+          <p class="text-[9px] font-mono text-zinc-650 mt-4 leading-relaxed font-normal">
+            * Milestone voucher pricing aligns with benchmark public exam booking standards.
+          </p>
         </article>
 
-        <!-- Security & Compliance Check -->
-        <article class="p-6 md:p-8 rounded-2xl border border-zinc-900 bg-zinc-950/40 space-y-4 hover-glow-card" aria-labelledby="security-title">
-          <h2 id="security-title" class="text-xl font-bold text-white flex items-center gap-2">
-            <svg class="w-5.5 h-5.5 text-theme-primary transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
-            Security &amp; Engineering Trust
-          </h2>
-          <div class="space-y-3 text-sm text-zinc-400 leading-relaxed font-mono">
-            <div class="flex items-start gap-2.5">
-              <span class="text-theme-primary font-bold transition-colors duration-300">[✓]</span>
-              <div>
-                <strong class="text-zinc-200 block text-xs">STRICT CSP META TAG</strong>
-                <span class="text-xs text-zinc-500">XSS mitigation; strictly blocks inline scripts, frames, object loading.</span>
+        <!-- Trust & Security Checklist -->
+        <article class="p-6 md:p-8 rounded-3xl border border-zinc-900/60 bg-zinc-950/40 glass-hover flex flex-col justify-between card-enter card-enter-delay-4" aria-labelledby="trust-title">
+          <div class="space-y-5">
+            <h2 id="trust-title" class="text-lg font-extrabold text-white flex items-center gap-2.5">
+              <svg class="w-5 h-5 text-theme-primary transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6" />
+              </svg>
+              Security Policy Compliance
+            </h2>
+            
+            <div class="space-y-4 font-mono text-xs">
+              <div class="flex items-start gap-3">
+                <span class="text-theme-primary font-bold transition-colors duration-300">[✓]</span>
+                <div class="space-y-0.5">
+                  <h3 class="text-zinc-200 text-xs font-bold">STRICT CSP PARAMETERS</h3>
+                  <p class="text-[10px] text-zinc-500 leading-relaxed font-normal">Active mitigation against cross-site scripting (XSS) vectors.</p>
+                </div>
               </div>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <span class="text-theme-primary font-bold transition-colors duration-300">[✓]</span>
-              <div>
-                <strong class="text-zinc-200 block text-xs">ZERO THIRD-PARTY TRACKING</strong>
-                <span class="text-xs text-zinc-500">No Google Analytics, fonts, or external scripts. Completely adblock-friendly.</span>
+
+              <div class="flex items-start gap-3">
+                <span class="text-theme-primary font-bold transition-colors duration-300">[✓]</span>
+                <div class="space-y-0.5">
+                  <h3 class="text-zinc-200 text-xs font-bold">OUTBOUND PRIVACY PROTECTION</h3>
+                  <p class="text-[10px] text-zinc-500 leading-relaxed font-normal">Referrer leak blocks applied for outbound navigation links.</p>
+                </div>
               </div>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <span class="text-theme-primary font-bold transition-colors duration-300">[✓]</span>
-              <div>
-                <strong class="text-zinc-200 block text-xs">OFFLINE-FIRST PROGRESSIVE WEB APP</strong>
-                <span class="text-xs text-zinc-500">Service Worker static caching allows access under offline environments.</span>
+
+              <div class="flex items-start gap-3">
+                <span class="text-theme-primary font-bold transition-colors duration-300">[✓]</span>
+                <div class="space-y-0.5">
+                  <h3 class="text-zinc-200 text-xs font-bold">PWA SANITIZED STATIC FOOTPRINT</h3>
+                  <p class="text-[10px] text-zinc-500 leading-relaxed font-normal">Zero external dependency packages loaded or trackers active.</p>
+                </div>
               </div>
             </div>
           </div>
+
+          <p class="text-[9px] font-mono text-zinc-650 mt-4 leading-relaxed font-normal">
+            Verified compliant with modern cryptographic deployment workflows.
+          </p>
         </article>
 
       </div>
 
       <!-- FAQ Section -->
-      <section class="space-y-6 mt-6" aria-labelledby="faq-title">
-        <h2 id="faq-title" class="text-2xl font-bold tracking-tight text-white text-center flex items-center justify-center gap-2">
-          <svg class="w-6 h-6 text-theme-primary transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+      <section class="space-y-6" aria-labelledby="faq-title">
+        <h2 id="faq-title" class="text-xl font-extrabold tracking-tight text-white text-center flex items-center justify-center gap-2.5">
+          <svg class="w-5 h-5 text-theme-primary transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12" />
+          </svg>
           Frequently Asked Questions
         </h2>
-        <div class="max-w-2xl mx-auto divide-y divide-zinc-900 border-t border-b border-zinc-900">
+        
+        <div class="max-w-3xl mx-auto divide-y divide-zinc-900 border-t border-b border-zinc-900/60">
           
-          <details class="group py-4 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+          <details class="group py-4 transition-all [&_summary::-webkit-details-marker]:hidden">
             <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-zinc-200 hover:text-white transition-colors" role="button" aria-expanded="false" tabindex="0">
-              <h3 class="text-sm md:text-base font-semibold">Why was CashApp chosen for contributions?</h3>
+              <h3 class="text-sm font-semibold">Why was direct payment chosen?</h3>
               <span class="relative h-5 w-5 shrink-0 flex items-center justify-center text-zinc-500 group-open:-rotate-180 transition-transform duration-300">
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
               </span>
             </summary>
-            <p class="mt-2 text-xs md:text-sm text-zinc-400 leading-relaxed pl-1">
-              CashApp provides zero-fee, direct peer-to-peer transfers. Unlike conventional crowdfunding platforms (e.g. GoFundMe or Kickstarter), there are no hidden platform fees, payment processing cuts, or delayed payouts, and it does not require loading heavy third-party tracking scripts.
+            <p class="mt-2.5 text-xs text-zinc-500 leading-relaxed pl-1 font-normal">
+              Conventional web platforms apply heavy fee deductibles and load complex client tracking libraries. Direct routing avoids third-party commission overhead, keeping page sizes lightweight and secure.
             </p>
           </details>
 
-          <details class="group py-4 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+          <details class="group py-4 transition-all [&_summary::-webkit-details-marker]:hidden">
             <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-zinc-200 hover:text-white transition-colors" role="button" aria-expanded="false" tabindex="0">
-              <h3 class="text-sm md:text-base font-semibold">How can I verify this campaign is authentic?</h3>
+              <h3 class="text-sm font-semibold">How can this campaign be validated?</h3>
               <span class="relative h-5 w-5 shrink-0 flex items-center justify-center text-zinc-500 group-open:-rotate-180 transition-transform duration-300">
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
               </span>
             </summary>
-            <p class="mt-2 text-xs md:text-sm text-zinc-400 leading-relaxed pl-1">
-              This campaign is hosted directly on GitHub Pages using cryptographic commits. The associated CashApp address matches my public engineering profiles. If you have any doubt, you can review the repository history, or contact me through my verified social links.
+            <p class="mt-2.5 text-xs text-zinc-500 leading-relaxed pl-1 font-normal">
+              Source code builds and history commits map straight to the cryptographic public repository. Verification can be completed directly through the personal website links.
             </p>
           </details>
 
-          <details class="group py-4 transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
-            <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-zinc-200 hover:text-white transition-colors" role="button" aria-expanded="false" tabindex="0">
-              <h3 class="text-sm md:text-base font-semibold">How does the Content Security Policy protect my browser?</h3>
-              <span class="relative h-5 w-5 shrink-0 flex items-center justify-center text-zinc-500 group-open:-rotate-180 transition-transform duration-300">
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-              </span>
-            </summary>
-            <p class="mt-2 text-xs md:text-sm text-zinc-400 leading-relaxed pl-1">
-              Our strict HTTP Content Security Policy (CSP) header instructs your browser to refuse any JavaScript execution that does not originate from our signed, compiled static files. It blocks inline injections, remote script loading, framing (anti-clickjacking), and external font API fetches, making this site extremely secure against cross-site scripting (XSS).
-            </p>
-          </details>
-          
         </div>
       </section>
 
     </main>
 
-    <!-- Accessible Clipboard Announcement Block (Visually Hidden) -->
+    <!-- Visual copied announcement box -->
     <div id="sr-announcement" class="sr-only" aria-live="assertive"></div>
 
-    <!-- PWA dynamic update toast -->
-    <div id="update-toast" class="fixed bottom-24 left-6 z-50 max-w-sm bg-zinc-900 border border-theme-primary/30 p-4 rounded-xl shadow-2xl backdrop-blur-md hidden flex items-center justify-between gap-4 font-mono text-xs text-zinc-300" role="alert" aria-live="assertive">
-      <span>New update available. Apply reload?</span>
-      <button id="reload-btn" class="px-2.5 py-1 bg-theme-primary hover:bg-theme-hover text-zinc-950 font-bold rounded cursor-pointer transition-colors">RELOAD</button>
+    <!-- Reload update notification -->
+    <div id="update-toast" class="fixed bottom-24 left-6 z-50 max-w-sm bg-zinc-900 border border-theme-primary/30 p-4 rounded-2xl shadow-2xl backdrop-blur-md hidden flex items-center justify-between gap-4 font-mono text-xs text-zinc-300" role="alert" aria-live="assertive">
+      <span>Service update loaded. Apply reload?</span>
+      <button id="reload-btn" class="px-2.5 py-1 bg-theme-primary hover:bg-theme-hover text-zinc-950 font-extrabold rounded-lg cursor-pointer transition-colors">RELOAD</button>
     </div>
 
-    <!-- Dev Simulator Panel -->
-    <aside id="simulator-panel" class="fixed bottom-20 right-6 z-50 max-w-xs w-80 bg-zinc-900/90 border border-zinc-855 rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.6)] backdrop-blur-md hidden" aria-label="Developer simulator">
-      <div class="flex items-center justify-between mb-3 border-b border-zinc-800 pb-2">
+    <!-- Simulator widget panel -->
+    <aside id="simulator-panel" class="fixed bottom-20 right-6 z-50 max-w-xs w-80 bg-zinc-950/95 border border-zinc-900 rounded-3xl p-5 shadow-2xl backdrop-blur-xl hidden" aria-label="Dev Simulator">
+      <div class="flex items-center justify-between mb-4 border-b border-zinc-900 pb-2.5">
         <div class="flex items-center gap-1.5 text-indigo-400 font-mono text-xs font-bold">
-          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
-          SIMULATION PANEL
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75" /></svg>
+          SIMULATION CONSOLE
         </div>
         <button id="close-simulator" class="text-zinc-500 hover:text-zinc-300 font-mono text-xs cursor-pointer">✕</button>
       </div>
       <div class="space-y-4 font-mono text-xs text-zinc-400">
         <div class="space-y-1.5">
-          <div class="flex justify-between">
+          <div class="flex justify-between text-[11px]">
             <span>Simulate Raised:</span>
             <span id="sim-raised-val" class="text-theme-primary font-bold transition-colors duration-300">$20.00</span>
           </div>
-          <input id="sim-raised-slider" type="range" min="0" max="600" value="20" class="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-theme-primary" />
+          <input id="sim-raised-slider" type="range" min="0" max="600" value="20" class="w-full accent-theme-primary" />
         </div>
         <div class="space-y-1.5">
-          <div class="flex justify-between">
+          <div class="flex justify-between text-[11px]">
             <span>Contributors:</span>
             <span id="sim-contrib-val" class="text-indigo-400 font-bold">1</span>
           </div>
-          <input id="sim-contrib-slider" type="range" min="0" max="100" value="1" class="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" />
+          <input id="sim-contrib-slider" type="range" min="0" max="100" value="1" class="w-full accent-indigo-500" />
         </div>
-        <p class="text-[9px] text-zinc-500 leading-relaxed">
-          * This panel is for demonstration. It tests CSS transitions, dynamic progress calculation, and layout adaptability.
+        <p class="text-[9px] text-zinc-650 leading-relaxed">
+          Allows real-time validation of allocations, states, and responsive timeline behaviors.
         </p>
       </div>
     </aside>
 
-    <!-- Floating Toggle Button for Simulator -->
-    <button id="toggle-simulator" type="button" class="fixed bottom-6 right-6 z-40 p-3 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-400 hover:text-white rounded-full shadow-lg hover:border-zinc-700 transition-all active:scale-95 flex items-center justify-center cursor-pointer" aria-label="Open simulator panel" title="Simulate crowdfunding progress">
-      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
+    <!-- Floating simulator toggle button -->
+    <button id="toggle-simulator" type="button" class="fixed bottom-6 right-6 z-40 p-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-white rounded-full shadow-lg transition-all active:scale-95 flex items-center justify-center cursor-pointer" aria-label="Open Simulation Dashboard" title="Toggle simulation controls">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75" /></svg>
     </button>
 
     <!-- Footer -->
     <footer class="border-t border-zinc-900 bg-zinc-950 py-8 text-center text-xs font-mono text-zinc-500 relative z-10">
-      <div class="max-w-4xl mx-auto px-4 space-y-2">
+      <div class="max-w-5xl mx-auto px-4 space-y-2">
         <p>&copy; 2026 Crowdfund Campaign. All Rights Reserved.</p>
-        <p class="flex items-center justify-center gap-2">
-          <span>Zero Cookies</span>
-          <span class="text-zinc-800">•</span>
+        <p class="flex items-center justify-center gap-2 text-[10px]">
           <span>Zero Tracking</span>
+          <span class="text-zinc-800">•</span>
+          <span>Zero Cookies</span>
           <span class="text-zinc-800">•</span>
           <a href="sitemap.xml" class="hover:text-zinc-300 underline">Sitemap</a>
         </p>
